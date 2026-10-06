@@ -1,0 +1,6 @@
+{
+  "extends": ["eslint:recommended", "plugin:security/recommended-legacy"],
+  "plugins": ["security"],
+  "env": { "node": true, "es6": true },
+  "parserOptions": { "sourceType": "module", "ecmaVersion": 2020 }
+}
