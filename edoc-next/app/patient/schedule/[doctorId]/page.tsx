@@ -3,6 +3,19 @@ import { bookAppointment } from "./actions"
 import { Suspense } from "react"
 import { SkeletonBlock } from "@/components/ui/SkeletonBlock"
 
+function formatTime(date: Date) {
+  try {
+    const hours = date.getUTCHours()
+    const minutes = date.getUTCMinutes()
+    const ampm = hours >= 12 ? 'PM' : 'AM'
+    const formattedHours = hours % 12 || 12
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes
+    return `${formattedHours}:${formattedMinutes} ${ampm}`
+  } catch {
+    return date.toLocaleTimeString()
+  }
+}
+
 async function DoctorScheduleContent({ doctorId }: { doctorId: string }) {
   const doctor = await prisma.doctor.findUnique({
     where: { id: parseInt(doctorId) },
@@ -43,7 +56,7 @@ async function DoctorScheduleContent({ doctorId }: { doctorId: string }) {
               <div>
                 <h3 className="font-semibold text-foreground">{schedule.title}</h3>
                 <p className="text-sm text-muted-foreground mt-0.5">
-                  {schedule.scheduledate.toLocaleDateString()} at {schedule.scheduletime.toString()}
+                  {schedule.scheduledate.toLocaleDateString()} at {formatTime(schedule.scheduletime)}
                 </p>
                 <p className="text-xs text-slate-400 mt-1">
                   {schedule._count.appointments} / {schedule.nop} booked
