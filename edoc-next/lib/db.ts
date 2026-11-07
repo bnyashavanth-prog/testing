@@ -6,4 +6,5 @@ const globalForPrisma = globalThis as unknown as {
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient()
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// Preserve connection in serverless warm containers
+globalForPrisma.prisma = prisma

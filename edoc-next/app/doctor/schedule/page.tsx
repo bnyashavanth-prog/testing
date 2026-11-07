@@ -19,9 +19,8 @@ function formatTime(date: Date) {
 }
 
 async function ScheduleList({ userId }: { userId: string }) {
-  const doctor = await prisma.doctor.findUnique({ where: { userId } })
   const schedules = await prisma.schedule.findMany({
-    where: { doctorId: doctor?.id },
+    where: { doctor: { userId } },
     include: { _count: { select: { appointments: true } } },
     orderBy: { scheduledate: 'asc' }
   })

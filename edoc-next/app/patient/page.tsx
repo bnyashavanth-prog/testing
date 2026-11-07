@@ -4,14 +4,21 @@ import { Suspense } from "react"
 import { SkeletonStats } from "@/components/ui/SkeletonBlock"
 
 async function PatientDashboardStats({ userId }: { userId: string }) {
-  const patient = await prisma.patient.findUnique({ where: { userId } })
-
-  const upcomingAppointments = await prisma.appointment.count({
-    where: { 
-      patientId: patient?.id,
-      schedule: { scheduledate: { gte: new Date() } }
+  const patient = await prisma.patient.findUnique({
+    where: { userId },
+    select: {
+      pname: true,
+      _count: {
+        select: {
+          appointments: {
+            where: { schedule: { scheduledate: { gte: new Date() } } }
+          }
+        }
+      }
     }
   })
+
+  const upcomingAppointments = patient?._count.appointments ?? 0
 
   return (
     <>

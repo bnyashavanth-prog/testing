@@ -4,9 +4,8 @@ import { Suspense } from "react"
 import { SkeletonTable } from "@/components/ui/SkeletonBlock"
 
 async function AppointmentsList({ userId }: { userId: string }) {
-  const doctor = await prisma.doctor.findUnique({ where: { userId } })
   const appointments = await prisma.appointment.findMany({
-    where: { schedule: { doctorId: doctor?.id } },
+    where: { schedule: { doctor: { userId } } },
     include: { patient: true, schedule: true },
     orderBy: { schedule: { scheduledate: 'asc' } }
   })

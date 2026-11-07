@@ -4,8 +4,15 @@ import { Suspense } from "react"
 import { SkeletonStats } from "@/components/ui/SkeletonBlock"
 
 async function DashboardStats({ userId }: { userId: string }) {
-  const doctor = await prisma.doctor.findUnique({ where: { userId } })
-  const appointmentCount = await prisma.schedule.count({ where: { doctorId: doctor?.id } })
+  const doctor = await prisma.doctor.findUnique({
+    where: { userId },
+    select: {
+      docname: true,
+      _count: {
+        select: { schedules: true }
+      }
+    }
+  })
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -15,7 +22,7 @@ async function DashboardStats({ userId }: { userId: string }) {
       </div>
       <div className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
         <div className="text-sm font-medium text-muted-foreground">Scheduled Sessions</div>
-        <div className="mt-1 text-3xl font-bold text-primary">{appointmentCount}</div>
+        <div className="mt-1 text-3xl font-bold text-primary">{doctor?._count.schedules ?? 0}</div>
       </div>
     </div>
   )
