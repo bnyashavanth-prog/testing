@@ -20,7 +20,8 @@ async function AdminAppointmentsList() {
 
   return (
     <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
-      <table className="w-full text-left border-collapse">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse min-w-[600px]">
         <thead>
           <tr className="bg-slate-50 border-b border-border">
             <th className="p-4 font-medium text-sm text-muted-foreground">Patient</th>
@@ -53,6 +54,7 @@ async function AdminAppointmentsList() {
           )}
         </tbody>
       </table>
+      </div>
     </div>
   )
 }

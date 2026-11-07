@@ -14,7 +14,8 @@ async function AdminDoctorsList() {
     <>
       <DoctorForm specialties={specialties} />
       <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
-        <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[550px]">
           <thead>
             <tr className="bg-slate-50 border-b border-border">
               <th className="p-4 font-medium text-sm text-muted-foreground">Name</th>
@@ -48,6 +49,7 @@ async function AdminDoctorsList() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </>
   )
