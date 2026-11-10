@@ -25,6 +25,8 @@ model User {
   admin   Admin?
   doctor  Doctor?
   patient Patient?
+
+  @@index([role])
 }
 
 model Admin {
@@ -49,6 +51,8 @@ model Doctor {
   specialtyId Int
   specialty   Specialty @relation(fields: [specialtyId], references: [id])
   schedules   Schedule[]
+
+  @@index([specialtyId])
 }
 
 model Patient {
@@ -72,6 +76,9 @@ model Schedule {
   scheduletime DateTime      @db.Time
   nop          Int
   appointments Appointment[]
+
+  @@index([doctorId])
+  @@index([scheduledate])
 }
 
 model Appointment {
@@ -86,4 +93,8 @@ model Appointment {
   // One booking per patient per session, and no repeated queue numbers.
   @@unique([patientId, scheduleId])
   @@unique([scheduleId, apponum])
+  @@index([patientId])
+  @@index([scheduleId])
+  @@index([appodate])
 }
+
