@@ -1,6 +1,7 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/db"
 import { startOfToday } from "@/lib/dates"
+import Link from "next/link"
 import { Suspense } from "react"
 import { SkeletonStats } from "@/components/ui/SkeletonBlock"
 
@@ -35,8 +36,8 @@ async function PatientDashboardStats({ userId }: { userId: string }) {
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
           <div className="text-sm font-medium text-muted-foreground mb-3">Quick Actions</div>
           <div className="flex flex-col gap-2">
-            <a href="/patient/doctors" className="text-primary text-sm font-medium hover:underline">Book a new appointment &rarr;</a>
-            <a href="/patient/appointments" className="text-primary text-sm font-medium hover:underline">View my history &rarr;</a>
+            <Link href="/patient/doctors" className="text-primary text-sm font-medium hover:underline">Book a new appointment &rarr;</Link>
+            <Link href="/patient/appointments" className="text-primary text-sm font-medium hover:underline">View my history &rarr;</Link>
           </div>
         </div>
       </div>

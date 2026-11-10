@@ -5,10 +5,12 @@ import { Suspense } from "react"
 import { SkeletonTable } from "@/components/ui/SkeletonBlock"
 
 async function AdminDoctorsList() {
-  const doctors = await prisma.doctor.findMany({
-    include: { specialty: true, user: true }
-  })
-  const specialties = await prisma.specialty.findMany()
+  const [doctors, specialties] = await Promise.all([
+    prisma.doctor.findMany({
+      include: { specialty: true, user: { select: { email: true } } }
+    }),
+    prisma.specialty.findMany()
+  ])
 
   return (
     <>

@@ -18,21 +18,25 @@ function formatTime(date: Date) {
 }
 
 async function DoctorScheduleContent({ doctorId }: { doctorId: string }) {
-  const doctor = await prisma.doctor.findUnique({
-    where: { id: parseInt(doctorId) },
-    include: { specialty: true }
-  })
+  const id = Number(doctorId)
+  if (!Number.isInteger(id)) return <div className="text-muted-foreground">Doctor not found</div>
+
+  const [doctor, schedules] = await Promise.all([
+    prisma.doctor.findUnique({
+      where: { id },
+      include: { specialty: true }
+    }),
+    prisma.schedule.findMany({
+      where: {
+        doctorId: id,
+        scheduledate: { gte: startOfToday() }
+      },
+      include: { _count: { select: { appointments: true } } },
+      orderBy: { scheduledate: 'asc' }
+    })
+  ])
 
   if (!doctor) return <div className="text-muted-foreground">Doctor not found</div>
-
-  const schedules = await prisma.schedule.findMany({
-    where: { 
-      doctorId: doctor.id,
-      scheduledate: { gte: startOfToday() }
-    },
-    include: { _count: { select: { appointments: true } } },
-    orderBy: { scheduledate: 'asc' }
-  })
 
   return (
     <>
