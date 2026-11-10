@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db"
-import { revalidatePath } from "next/cache"
+import { cancelAppointment } from "./actions"
 import { Suspense } from "react"
 import { SkeletonTable } from "@/components/ui/SkeletonBlock"
 
@@ -11,12 +11,6 @@ async function AdminAppointmentsList() {
     },
     orderBy: { schedule: { scheduledate: 'desc' } }
   })
-
-  async function cancelAppointment(appointmentId: number) {
-    "use server"
-    await prisma.appointment.delete({ where: { id: appointmentId } })
-    revalidatePath('/admin/appointments')
-  }
 
   return (
     <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">

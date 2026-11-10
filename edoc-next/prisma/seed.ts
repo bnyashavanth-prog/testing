@@ -4,7 +4,13 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-  const hashedPassword = await bcrypt.hash('123', 10)
+  // The test accounts get the password from SEED_PASSWORD so no known
+  // default password ever ends up in a real database.
+  const seedPassword = process.env.SEED_PASSWORD
+  if (!seedPassword || seedPassword.length < 8) {
+    throw new Error('Set SEED_PASSWORD (at least 8 characters) in .env before running the seed.')
+  }
+  const hashedPassword = await bcrypt.hash(seedPassword, 10)
 
   // 1. Specialties
   const specialties = [

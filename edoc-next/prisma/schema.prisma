@@ -82,4 +82,8 @@ model Appointment {
   scheduleId Int
   schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   appodate   DateTime @db.Date
+
+  // One booking per patient per session, and no repeated queue numbers.
+  @@unique([patientId, scheduleId])
+  @@unique([scheduleId, apponum])
 }

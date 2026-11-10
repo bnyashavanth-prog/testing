@@ -1,5 +1,6 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/db"
+import { startOfToday } from "@/lib/dates"
 import { Suspense } from "react"
 import { SkeletonStats } from "@/components/ui/SkeletonBlock"
 
@@ -11,7 +12,7 @@ async function PatientDashboardStats({ userId }: { userId: string }) {
       _count: {
         select: {
           appointments: {
-            where: { schedule: { scheduledate: { gte: new Date() } } }
+            where: { schedule: { scheduledate: { gte: startOfToday() } } }
           }
         }
       }
@@ -44,24 +45,15 @@ async function PatientDashboardStats({ userId }: { userId: string }) {
 }
 
 export default async function PatientDashboard() {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) return null
+  const session = await auth()
+  if (!session?.user?.id) return null
 
-    return (
-      <div>
-        <h1 className="text-3xl font-bold text-foreground mb-8">Dashboard</h1>
-        <Suspense fallback={<SkeletonStats count={2} />}>
-          <PatientDashboardStats userId={session.user.id} />
-        </Suspense>
-      </div>
-    )
-  } catch (error: any) {
-    return (
-      <div className="p-6 bg-red-50 text-red-900 rounded-2xl border border-red-200">
-        <h1 className="text-xl font-bold mb-2">Error</h1>
-        <pre className="whitespace-pre-wrap text-sm">{error.message || String(error)}</pre>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <h1 className="text-3xl font-bold text-foreground mb-8">Dashboard</h1>
+      <Suspense fallback={<SkeletonStats count={2} />}>
+        <PatientDashboardStats userId={session.user.id} />
+      </Suspense>
+    </div>
+  )
 }

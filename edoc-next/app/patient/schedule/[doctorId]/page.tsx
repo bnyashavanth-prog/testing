@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db"
-import { bookAppointment } from "./actions"
+import { startOfToday } from "@/lib/dates"
+import BookButton from "./BookButton"
 import { Suspense } from "react"
 import { SkeletonBlock } from "@/components/ui/SkeletonBlock"
 
@@ -27,7 +28,7 @@ async function DoctorScheduleContent({ doctorId }: { doctorId: string }) {
   const schedules = await prisma.schedule.findMany({
     where: { 
       doctorId: doctor.id,
-      scheduledate: { gte: new Date() }
+      scheduledate: { gte: startOfToday() }
     },
     include: { _count: { select: { appointments: true } } },
     orderBy: { scheduledate: 'asc' }
@@ -66,17 +67,7 @@ async function DoctorScheduleContent({ doctorId }: { doctorId: string }) {
               {isFull ? (
                 <span className="px-4 py-2 bg-slate-100 text-slate-400 rounded-xl text-sm font-medium">Full</span>
               ) : (
-                <form action={async () => {
-                  "use server"
-                  await bookAppointment(schedule.id)
-                }}>
-                  <button 
-                    type="submit"
-                    className="px-5 py-2 bg-primary text-white rounded-xl hover:bg-teal-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm cursor-pointer"
-                  >
-                    Book Now
-                  </button>
-                </form>
+                <BookButton scheduleId={schedule.id} />
               )}
             </div>
           )

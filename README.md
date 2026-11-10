@@ -43,8 +43,11 @@ A full-stack, role-based web application for managing doctor appointments, moder
    # Your Direct Supabase URL
    DIRECT_URL="postgresql://postgres.[YOUR-PROJECT]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres"
    
-   # Required for Auth.js in production (generate via `npx auth secret`)
+   # Required — the app has no built-in fallback (generate via `npx auth secret`)
    AUTH_SECRET="your-secret-key"
+
+   # Optional: time zone that decides which day counts as "today" (default Asia/Kolkata)
+   APP_TIMEZONE="Asia/Kolkata"
    ```
 
 4. **Initialize Database:**
@@ -60,13 +63,15 @@ A full-stack, role-based web application for managing doctor appointments, moder
 
 ## 👥 Default Test Accounts (If Seeded)
 
-If you run the Prisma seed script (`npx prisma db seed`), the following accounts will be created:
+Set `SEED_PASSWORD` (at least 8 characters) in `.env`, then run the Prisma seed script (`npx prisma db seed`). The following accounts will be created, all with that password:
 
-| Role | Email | Password |
-| :--- | :--- | :--- |
-| **Admin** | `admin@edoc.com` | `123` |
-| **Doctor** | `doctor@edoc.com` | `123` |
-| **Patient**| `patient@edoc.com` | `123` |
+| Role | Email |
+| :--- | :--- |
+| **Admin** | `admin@edoc.com` |
+| **Doctor** | `doctor@edoc.com` |
+| **Patient**| `patient@edoc.com` |
+
+The seed never overwrites an existing account, so accounts created by an earlier seed keep their old password until you change it.
 
 ## 📦 Deployment
 
